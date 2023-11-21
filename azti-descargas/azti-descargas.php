@@ -71,7 +71,12 @@ function wpAztiDescargas($params = array(), $content = null) {
       $mensaje = str_replace("[apellidos]", strip_tags($_REQUEST['apellido']), $mensaje);
       wp_mail(strip_tags($_REQUEST['email']), $asunto, $mensaje, $headers);
       $control = 1;
-      ?><h4 class="azti-mensaje"><?php printf(__("Gracias por solicitar el \"%s\". En breve recibirás un email en la dirección que nos has indicado.", "azti-descargas"), $params['descarga-titulo']); ?></h4><?php
+      ?>
+        <h4 class="azti-mensaje"><?php printf(__("Gracias por solicitar el \"%s\". En breve recibirás un email en la dirección que nos has indicado.", "azti-descargas"), $params['descarga-titulo']); ?></h4>
+        <script>  
+          gtag('event', 'descargar', {'event_category' : 'PDF','event_label' : 'DESCARGAR <?php echo addslashes($params['descarga-titulo']); ?>'});
+        </script>
+      <?php
     } else {
       ?><h4 class="azti-mensaje error"><?php _e("Hay problemas para establecer si eres o no un robot. Por favor, inténtalo dentro de un rato.", "azti-descargas"); ?></h4><?php
     }
@@ -107,8 +112,8 @@ function wpAztiDescargas($params = array(), $content = null) {
         <label><input type="text" name="pais" value=""><span><?php _e("País", "azti-descargas"); ?></span></label>
         <label><input type="text" name="provincia" value=""><span><?php _e("Provincia", "azti-descargas"); ?></span></label>
       </div>
-      <label><input id="azti-acepto-privacidad" type="checkbox" name="acepto-privacidad" value="1"> <?php _e("Acepto la <a href='/politica-de-privacidad/' target='_blank'>politica de privacidad</a>."); ?>*</label>  
-      <label><input id="azti-acepto-comunicaciones" type="checkbox" name="acepto-comunicaciones" value="1"> <?php _e("Acepto recibir por email comunicaciones de AZTI."); ?>*</label>  
+      <label><input id="azti-acepto-privacidad" type="checkbox" name="acepto-privacidad" value="1"> <?php _e("Acepto la <a href='/politica-de-privacidad/' target='_blank'>politica de privacidad</a>.", "azti-descargas"); ?>*</label>  
+      <label><input id="azti-acepto-comunicaciones" type="checkbox" name="acepto-comunicaciones" value="1"> <?php _e("Acepto recibir por email comunicaciones de AZTI.", "azti-descargas"); ?>*</label>  
       <input id="azti-enviar" type="submit" name="enviar" value="<?php _e("Solicitar", "azti-descargas"); ?>" disabled>
     </form>
     <script>

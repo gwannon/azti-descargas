@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: azti-descargas\n"
 "POT-Creation-Date: 2023-11-21 11:42+0100\n"
-"PO-Revision-Date: 2023-11-21 12:18+0100\n"
+"PO-Revision-Date: 2023-11-21 12:54+0100\n"
 "Last-Translator: \n"
 "Language-Team: jorge@enutt.net\n"
 "Language: en_US\n"
@@ -151,7 +151,7 @@ msgstr "I agree to receive email communications from AZTI ."
 
 #: ../azti-descargas.php:112
 msgid "Solicitar"
-msgstr ""
+msgstr "Request"
 
 #~ msgid "Enviar"
 #~ msgstr "Send"

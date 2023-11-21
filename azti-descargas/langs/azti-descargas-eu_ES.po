@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: azti-descargas\n"
-"POT-Creation-Date: 2023-11-21 11:41+0100\n"
-"PO-Revision-Date: 2023-11-21 12:17+0100\n"
+"POT-Creation-Date: 2023-11-21 12:53+0100\n"
+"PO-Revision-Date: 2023-11-21 12:54+0100\n"
 "Last-Translator: \n"
 "Language-Team: jorge@enutt.net\n"
 "Language: eu\n"
@@ -64,27 +64,31 @@ msgstr ""
 msgid "Asunto del email de descarga"
 msgstr ""
 
-#: ../admin.php:38
+#: ../admin.php:39 ../admin.php:45
+msgid "nombre del documento a descargar"
+msgstr ""
+
+#: ../admin.php:41
 msgid "Diseño del email de descarga"
 msgstr ""
 
-#: ../admin.php:42
+#: ../admin.php:44
 msgid "url del documento a descargar"
 msgstr ""
 
-#: ../admin.php:43
+#: ../admin.php:46
 msgid "nombre del usuario"
 msgstr ""
 
-#: ../admin.php:44
+#: ../admin.php:47
 msgid "apellido del usuario"
 msgstr ""
 
-#: ../admin.php:47
+#: ../admin.php:51
 msgid "Código CSS"
 msgstr ""
 
-#: ../admin.php:50
+#: ../admin.php:54
 msgid "Guardar"
 msgstr ""
 
@@ -151,7 +155,7 @@ msgstr "Onartzen dut posta elektronikoz jasotzea AZTIren komunikazioak."
 
 #: ../azti-descargas.php:112
 msgid "Solicitar"
-msgstr ""
+msgstr "Eskatu"
 
 #~ msgid "Enviar"
 #~ msgstr "Bidali"
