@@ -33,11 +33,11 @@ function wpAztiDescargas($params = array(), $content = null) {
   else $current_lang = get_bloginfo("language");
   
   if(isset($_REQUEST['enviar'])) {
-    $recaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . 
+    $recaptcha = wpAztiCurlCall('https://www.google.com/recaptcha/api/siteverify?secret=' . 
       get_option("_azti_descargas_recaptcha_secreto") . '&response=' . 
-      $_REQUEST['recaptcha_response']); 
-		$recaptcha = json_decode($recaptcha); 
-		if($recaptcha->score > 0.6){
+      $_REQUEST['recaptcha_response']);
+    echo "<!-- "; print_r($recaptcha); echo " -->";
+		if(isset($recaptcha->score) && $recaptcha->score > 0.6){
       $headers = array('Content-Type: text/html; charset=UTF-8');
       $emails = explode(",", get_option("_azti_descargas_emails"));
       unset($_REQUEST['enviar']);
@@ -135,6 +135,9 @@ function wpAztiDescargas($params = array(), $content = null) {
     #descarga-azti,
     #descarga-azti-form {
       font-family: Gotham, Arial;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
     }
 
     #descarga-azti {
@@ -204,7 +207,8 @@ function wpAztiDescargas($params = array(), $content = null) {
       transition: transform .2s ease-in-out;
     }
 
-    #descarga-azti-form label *:is(input[type=text], input[type=email]):focus + span {
+    #descarga-azti-form label *:is(input[type=text], input[type=email]):focus + span,
+    #descarga-azti-form label *:is(input[type=text], input[type=email]):not(:placeholder-shown) + span {
       transform: translateY(-23px) scale(.8);
     }
 
@@ -291,3 +295,12 @@ function wpAztiDescargas($params = array(), $content = null) {
   <?php return ob_get_clean();
 }
 add_shortcode('azti-descarga', 'wpAztiDescargas');
+
+function wpAztiCurlCall($link) {
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $link);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $json = json_decode(curl_exec($curl));
+  curl_close($curl);
+  return $json;
+}
