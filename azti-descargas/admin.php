@@ -40,14 +40,14 @@ function wpAztiAdminPage() {
       </ul><br/>
       <b><?php _e("Diseño del email de descarga", 'azti-descargas'); ?>:</b><br/>
       <?php wp_editor( stripslashes(get_option("_azti_descargas_mensaje_".$label)), '_azti_descargas_mensaje_'.$label, $settings ); ?><br/>
+      <ul>
+        <li>[descarga]: <?php _e("url del documento a descargar", 'azti-descargas'); ?></li>
+        <li>[descarga-titulo]: <?php _e("nombre del documento a descargar", 'azti-descargas'); ?></li>
+        <li>[nombre]: <?php _e("nombre del usuario", 'azti-descargas'); ?></li>
+        <li>[apellido]: <?php _e("apellido del usuario", 'azti-descargas'); ?></li>
+      </ul>
+      <br/><br/>
     <?php } ?>
-    <ul>
-      <li>[descarga]: <?php _e("url del documento a descargar", 'azti-descargas'); ?></li>
-      <li>[descarga-titulo]: <?php _e("nombre del documento a descargar", 'azti-descargas'); ?></li>
-      <li>[nombre]: <?php _e("nombre del usuario", 'azti-descargas'); ?></li>
-      <li>[apellido]: <?php _e("apellido del usuario", 'azti-descargas'); ?></li>
-    </ul>
-    <br/><br/>
     <b><?php _e("Código CSS", 'azti-descargas'); ?>:</b><br/>  
     <textarea name="_azti_descargas_css" style="width: 100%; height: 330px;"><?php echo get_option("_azti_descargas_css"); ?></textarea>
     <br/><br/>
