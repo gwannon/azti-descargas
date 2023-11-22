@@ -29,15 +29,21 @@ function wpAztiDescargas($params = array(), $content = null) {
   ob_start(); 
   $control = 0;
 
-  if(defined('ICL_LANGUAGE_NAME')) $current_lang = ICL_LANGUAGE_NAME;
-  else $current_lang = get_bloginfo("language");
-  
-  if(isset($_REQUEST['enviar'])) {
+  if(defined('ICL_LANGUAGE_CODE')) $current_lang = ICL_LANGUAGE_CODE;
+  else $current_lang = get_bloginfo("language"); ?>
+  <div id="descarga-azti">
+    <?php if(isset($params['imagen'])) { ?><img src="<?php echo $params['imagen']; ?>" alt="" ><?php } ?>
+    <div>
+      <h3><?php echo $params['titulo']; ?></h3>
+      <?php echo apply_filters("the_content", $content); ?>
+    </div>
+  </div>
+  <span id="descarga-azti-response"></span>
+  <?php if(isset($_REQUEST['enviar'])) {
     $recaptcha = wpAztiCurlCall('https://www.google.com/recaptcha/api/siteverify?secret=' . 
       get_option("_azti_descargas_recaptcha_secreto") . '&response=' . 
       $_REQUEST['recaptcha_response']);
-    echo "<!-- "; print_r($recaptcha); echo " -->";
-		if(isset($recaptcha->score) && $recaptcha->score > 0.6){
+      if(isset($recaptcha->score) && $recaptcha->score > 0.6){
       $headers = array('Content-Type: text/html; charset=UTF-8');
       $emails = explode(",", get_option("_azti_descargas_emails"));
       unset($_REQUEST['enviar']);
@@ -81,19 +87,13 @@ function wpAztiDescargas($params = array(), $content = null) {
       ?><h4 class="azti-mensaje error"><?php _e("Hay problemas para establecer si eres o no un robot. Por favor, inténtalo dentro de un rato.", "azti-descargas"); ?></h4><?php
     }
   } ?>
-  <div id="descarga-azti">
-    <?php if(isset($params['imagen'])) { ?><img src="<?php echo $params['imagen']; ?>" alt="" ><?php } ?>
-    <div>
-      <h3><?php echo $params['titulo']; ?></h3>
-      <?php echo apply_filters("the_content", $content); ?>
-    </div>
-  </div>
   <?php if($control == 0) { ?> 
-    <form id="descarga-azti-form" method="post">
+    <form id="descarga-azti-form" method="post" action="<?php echo get_the_permalink(); ?>#descarga-azti-response">
       <!--  -------------- Recaptcha ------------ -->
       <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
-      <?php if(!defined('WPCF7_VERSION')) { ?>
+      <?php /*if(!defined('WPCF7_VERSION')) {*/ ?>
       <script src='https://www.google.com/recaptcha/api.js?render=<?php echo get_option("_azti_descargas_recaptcha_sitio"); ?>'></script>
+	    <?php /*}*/ ?>
       <script>
         grecaptcha.ready(function() {
           grecaptcha.execute('<?php echo get_option("_azti_descargas_recaptcha_sitio"); ?>', {action: 'comentario'}).then(function(token) {
@@ -101,7 +101,7 @@ function wpAztiDescargas($params = array(), $content = null) {
             recaptchaResponse.value = token;
           });
         });
-      </script><?php } ?>
+      </script>
       <div>
         <label><input type="text" name="nombre" value="" required><span><?php _e("Nombre", "azti-descargas"); ?>*</span></label>
         <label><input type="text" name="apellido" value="" required><span><?php _e("Apellido", "azti-descargas"); ?>*</span></label>
@@ -117,6 +117,24 @@ function wpAztiDescargas($params = array(), $content = null) {
       <input id="azti-enviar" type="submit" name="enviar" value="<?php _e("Solicitar", "azti-descargas"); ?>" disabled>
     </form>
     <script>
+
+      jQuery("#descarga-azti-form > div > label > input[type=text]").each(function(index) {
+        if(jQuery(this).val() != '') {
+          jQuery(this).parent().addClass("has-content");
+        } else {
+          jQuery(this).parent().removeClass("has-content");
+        }
+      });
+
+      jQuery("#descarga-azti-form > div > label > input[type=text]").on('change', function(){
+        if(jQuery(this).val() != '') {
+          jQuery(this).parent().addClass("has-content");
+        } else {
+          jQuery(this).parent().removeClass("has-content");
+        }
+      });
+
+
       const privacidad = document.getElementById("azti-acepto-privacidad");
       const comunicaciones = document.getElementById("azti-acepto-comunicaciones");  
       const enviar = document.getElementById('azti-enviar');
@@ -207,8 +225,7 @@ function wpAztiDescargas($params = array(), $content = null) {
       transition: transform .2s ease-in-out;
     }
 
-    #descarga-azti-form label *:is(input[type=text], input[type=email]):focus + span,
-    #descarga-azti-form label *:is(input[type=text], input[type=email]):not(:placeholder-shown) + span {
+    #descarga-azti-form label *:is(input[type=text], input[type=email]):focus + span {
       transform: translateY(-23px) scale(.8);
     }
 
@@ -283,18 +300,54 @@ function wpAztiDescargas($params = array(), $content = null) {
     h4.azti-mensaje {
       font-size: 24px;
       line-height: 28px;
+	    margin-top: 80px;
     }
 
     h4.error.azti-mensaje {
-      color: red;
+      color: #000;
+	  font-size: 22px;
+      line-height: 28px;
+	  background-color: #fcda01;
+	  padding: 10px;
+	  text-align: center;
     }
 
+    #descarga-azti {
+        margin-top: 30px;
+    }
 
+    #descarga-azti, #descarga-azti-form {
+        margin-left: 8.3333333333%;
+        width: 83.3333333333%;
+    }
+
+    @media (min-width: 768px) {
+      #descarga-azti, #descarga-azti-form {
+          margin-left: 16.6666666667%;
+          width: 66.6666666667%;
+      }
+    }
+
+    @media (min-width: 992px) {
+      #descarga-azti, #descarga-azti-form {
+          margin-left: 16.6666666667%;
+          width: 41.6666666667%;
+      }
+    }
+
+    @media (min-width: 1510px) {
+      #descarga-azti, #descarga-azti-form {
+          margin-left: 25%;
+          width: 33.3333333333%;
+      }
+    }
+	  
     <?php echo get_option("_azti_descargas_css"); ?>
   </style>
   <?php return ob_get_clean();
 }
 add_shortcode('azti-descarga', 'wpAztiDescargas');
+
 
 function wpAztiCurlCall($link) {
   $curl = curl_init();
