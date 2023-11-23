@@ -28,6 +28,7 @@ function wpAztiDescargas($params = array(), $content = null) {
   global $post;
   ob_start(); 
   $control = 0;
+  $fields = ["nombre", "apellido", "email", "empresa", "cargo", "sector", "pais", "provincia", "acepto-privacidad", "acepto-comunicaciones"];
 
   if(defined('ICL_LANGUAGE_CODE')) $current_lang = ICL_LANGUAGE_CODE;
   else $current_lang = get_bloginfo("language"); ?>
@@ -51,7 +52,9 @@ function wpAztiDescargas($params = array(), $content = null) {
 
       //Guardar datos en CSV
       $f=fopen(__DIR__."/csv/descargas.csv", "a+");
-      $csv = $_REQUEST;
+      foreach($_POST as $item => $value) {
+        if(in_array($item, $fields)) $csv[$item] = $value;
+      }
       $csv['fecha'] = date("Y-m-d H:i:s");
       $csv['descarga'] = $params['descarga'];
       $csv['url'] = get_the_permalink();
@@ -60,8 +63,8 @@ function wpAztiDescargas($params = array(), $content = null) {
 
       //Enviamos email de aviso a los admin
       $mensaje = "Descarga: " . $params['descarga'] . "<br/>";
-      foreach($_REQUEST as $item => $value) {
-        $mensaje .= $item . ": " . $value . "<br/>";
+      foreach($_POST as $item => $value) {
+        if(in_array($item, $fields)) $mensaje .= $item . ": " . $value . "<br/>";
       }
       foreach($emails as $email) {
         wp_mail(chop($email), "Aviso de descarga de documento AZTI", $mensaje, $headers);
@@ -93,7 +96,7 @@ function wpAztiDescargas($params = array(), $content = null) {
       <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
       <?php /*if(!defined('WPCF7_VERSION')) {*/ ?>
       <script src='https://www.google.com/recaptcha/api.js?render=<?php echo get_option("_azti_descargas_recaptcha_sitio"); ?>'></script>
-	    <?php /*}*/ ?>
+	  <?php /*}*/ ?>
       <script>
         grecaptcha.ready(function() {
           grecaptcha.execute('<?php echo get_option("_azti_descargas_recaptcha_sitio"); ?>', {action: 'comentario'}).then(function(token) {
@@ -117,24 +120,23 @@ function wpAztiDescargas($params = array(), $content = null) {
       <input id="azti-enviar" type="submit" name="enviar" value="<?php _e("Solicitar", "azti-descargas"); ?>" disabled>
     </form>
     <script>
-
-      jQuery("#descarga-azti-form > div > label > input[type=text]").each(function(index) {
+		jQuery("#descarga-azti-form > div > label > input[type=text]").each(function(index) {
         if(jQuery(this).val() != '') {
           jQuery(this).parent().addClass("has-content");
         } else {
           jQuery(this).parent().removeClass("has-content");
         }
       });
-
-      jQuery("#descarga-azti-form > div > label > input[type=text]").on('change', function(){
+		
+	  jQuery("#descarga-azti-form > div > label > input[type=text],#descarga-azti-form > div > label > input[type=email]").on('change', function(){
         if(jQuery(this).val() != '') {
           jQuery(this).parent().addClass("has-content");
         } else {
           jQuery(this).parent().removeClass("has-content");
         }
       });
-
-
+		
+		
       const privacidad = document.getElementById("azti-acepto-privacidad");
       const comunicaciones = document.getElementById("azti-acepto-comunicaciones");  
       const enviar = document.getElementById('azti-enviar');
@@ -225,7 +227,8 @@ function wpAztiDescargas($params = array(), $content = null) {
       transition: transform .2s ease-in-out;
     }
 
-    #descarga-azti-form label *:is(input[type=text], input[type=email]):focus + span {
+    #descarga-azti-form label *:is(input[type=text], input[type=email]):focus + span,
+	#descarga-azti-form label.has-content *:is(input[type=text], input[type=email]) + span {
       transform: translateY(-23px) scale(.8);
     }
 
@@ -300,7 +303,7 @@ function wpAztiDescargas($params = array(), $content = null) {
     h4.azti-mensaje {
       font-size: 24px;
       line-height: 28px;
-	    margin-top: 80px;
+	  margin-top: 80px;
     }
 
     h4.error.azti-mensaje {
@@ -312,35 +315,35 @@ function wpAztiDescargas($params = array(), $content = null) {
 	  text-align: center;
     }
 
-    #descarga-azti {
-        margin-top: 30px;
-    }
+#descarga-azti {
+     margin-top: 30px;
+}
 
-    #descarga-azti, #descarga-azti-form {
-        margin-left: 8.3333333333%;
-        width: 83.3333333333%;
-    }
+#descarga-azti, #descarga-azti-form {
+    margin-left: 8.3333333333%;
+    width: 83.3333333333%;
+}
 
-    @media (min-width: 768px) {
-      #descarga-azti, #descarga-azti-form {
-          margin-left: 16.6666666667%;
-          width: 66.6666666667%;
-      }
-    }
+@media (min-width: 768px) {
+#descarga-azti, #descarga-azti-form {
+    margin-left: 16.6666666667%;
+    width: 66.6666666667%;
+}
+}
 
-    @media (min-width: 992px) {
-      #descarga-azti, #descarga-azti-form {
-          margin-left: 16.6666666667%;
-          width: 41.6666666667%;
-      }
-    }
+@media (min-width: 992px) {
+#descarga-azti, #descarga-azti-form {
+    margin-left: 16.6666666667%;
+    width: 41.6666666667%;
+}
+}
 
-    @media (min-width: 1510px) {
-      #descarga-azti, #descarga-azti-form {
-          margin-left: 25%;
-          width: 33.3333333333%;
-      }
-    }
+@media (min-width: 1510px) {
+#descarga-azti, #descarga-azti-form {
+    margin-left: 25%;
+    width: 33.3333333333%;
+}
+}
 	  
     <?php echo get_option("_azti_descargas_css"); ?>
   </style>
